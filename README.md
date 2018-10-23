@@ -10,6 +10,6 @@ Install the ar track alvar package in your ROS package http://wiki.ros.org/ar_tr
 
 Install the Baxter PyKDL package in your ROS package http://sdk.rethinkrobotics.com/wiki/Baxter_PyKDL
 
-Then follow the user Guide's instructions to execute the program
+Then follow the user Guide's instructions to execute the program (available in the GitHub repository)
 
 Vidéos are on the Youtube channel : Aip-Primeca Occitanie
