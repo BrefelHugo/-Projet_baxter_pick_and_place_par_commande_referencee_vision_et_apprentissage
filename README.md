@@ -6,6 +6,8 @@ Setup Ros Environment for Baxter http://sdk.rethinkrobotics.com/wiki/Hello_Baxte
 
 Install the opencv for ROS package http://wiki.ros.org/vision_opencv
 
+Install the ar track alvar package in your ROS package http://wiki.ros.org/ar_track_alvar
+
 Install the Baxter PyKDL package in your ROS package http://sdk.rethinkrobotics.com/wiki/Baxter_PyKDL
 
 Then follow the user Guide's instructions to execute the program
