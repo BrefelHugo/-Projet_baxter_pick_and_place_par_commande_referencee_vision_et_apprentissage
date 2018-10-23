@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+
+import roslib
+import sys
+import rospy
+import signal
+
+from BaxterArm import BaxterArm
+from baxter_interface import RobotEnable
+import tuck_arms
+
+from time import sleep
+
+class BaxterRobot:
+	
+	def __init__(self, picker_arm, camera_arm):
+		signal.signal(signal.SIGINT, self.signal_term_handler)
+		baxter = RobotEnable()
+		baxter.enable()
+		self.picker = picker_arm
+		self.camera = camera_arm
+
+	def signal_term_handler(self, signal, frame):
+		"""
+			function executed when the program is interrupted
+		"""
+		rospy.logerr("... Program interruption by user ...")
+		sys.exit(0)
+
+	def resettingRobot(self):
+		"""
+			Reset the position of the robot
+		"""
+		try:
+            		raw_input("When everyone is out of robot's action field," +
+				"please press enter to continue")
+		except KeyboardInterrupt:
+			sys.exit(0)
+		tucker = tuck_arms.Tuck(False)
+    		rospy.on_shutdown(tucker.clean_shutdown)
+    		tucker.supervised_tuck()
+		sleep(1)
+    		rospy.loginfo("Finished tuck")
+
+	def stereoLearning(self):
+		"""
+			Do the procedure to learn how to be positionned in respect to the ar-tag at
+			the end of the visual servoing
+		"""
+		self.resettingRobot()
+		self.picker_arm = BaxterArm(self.picker, self)
+		self.picker_arm.acquisition()
+
+	def stereoPickAndPlace(self):
+		"""
+			Do the procedure of visual servoing in relation to the ar-tag
+			then do the procedure of pick and place of the object
+		"""
+		self.resettingRobot()
+		self.picker_arm = BaxterArm(self.picker, self)
+		self.camera_arm = BaxterArm(self.camera, self)
+		self.picker_arm.visualServoing()
+		self.picker_arm.pickAndPlace()
+
+def main(args):
+	rospy.init_node("BaxterRobot", anonymous=True)
+	print("unitary test BaxterRobot")
+
+if __name__ == "__main__":
+	main(sys.argv)

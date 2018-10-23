@@ -1,0 +1,38 @@
+<launch>
+
+	<arg name="marker_size" default="5.1" />
+	<arg name="max_new_marker_error" default="0.08" />
+	<arg name="max_track_error" default="0.2" />
+
+	<arg name="cam_image_topic" default="/cameras/left_hand_camera/image" />
+	<arg name="cam_info_topic" default="/cameras/left_hand_camera/camera_info" />
+	<arg name="output_frame_left" default="/left_hand_camera" />
+
+	<node name="ar_track_alvar_left" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+		<param name="marker_size"           type="double" value="$(arg marker_size)" />
+		<param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+		<param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+		<param name="output_frame"          type="string" value="$(arg output_frame_left)" />
+
+		<remap from="camera_image"  to="$(arg cam_image_topic)" />
+		<remap from="camera_info"   to="$(arg cam_info_topic)" />
+		<remap from="/ar_pose_marker" to="/ar_pose_marker_left" />
+	</node>
+
+	<arg name="output_frame_left_to_base" default="/base" />
+
+	<node name="ar_track_alvar_left_to_base" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+		<param name="marker_size"           type="double" value="$(arg marker_size)" />
+		<param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+		<param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+		<param name="output_frame"          type="string" value="$(arg output_frame_left_to_base)" />
+
+		<remap from="camera_image"  to="$(arg cam_image_topic)" />
+		<remap from="camera_info"   to="$(arg cam_info_topic)" />
+		<remap from="/ar_pose_marker" to="/ar_pose_marker_left_to_base" />
+	</node>
+
+
+	<node name="LearningScenarioAR" pkg="PickNPlace" type="LearningScenarioAR.py" output="screen" />
+
+</launch>
